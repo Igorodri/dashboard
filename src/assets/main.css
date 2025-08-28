@@ -1,0 +1,16 @@
+:root{
+  --cor-fundo: #0d1117 ;
+  --cor-secundaria: #0570F9;
+  --cor-principal-texto: #f9f9f9;
+  --cor-secundaria-texto: #828282;
+  --cor-secundaria-pressionada: #378cfb;
+}
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cor-fundo);
+}
+
