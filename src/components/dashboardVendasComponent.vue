@@ -42,6 +42,7 @@ onMounted(() => {
                   <th>Nome</th>
                   <th>Projeto</th>
                   <th>Preço</th>
+                  <th>Pago</th>
                 </tr>
               </thead>
               <tbody>
@@ -49,6 +50,7 @@ onMounted(() => {
                   <td>{{ venda.nome_cliente }}</td>
                   <td>{{ venda.descricao }}</td>
                   <td>R$ {{ venda.preco }}</td>
+                  <td>{{ venda.paga }}</td>
                   <div class="area-btns">
                     <div class="btn">🗑️</div>
                     <div class="btn">🖊️</div>
@@ -69,6 +71,8 @@ onMounted(() => {
 .dashboard {
   display: flex;
   height: 100vh;
+  position: absolute;
+  width: 100%;
 }
 
 /* Main */

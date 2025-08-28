@@ -1,6 +1,7 @@
 <script setup>
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
+import RegistroClienteComponent from "./RegistroClienteComponent.vue";
 import {ref, onMounted} from 'vue'
 
 const mostrarRegistroCliente = ref(false)
@@ -15,6 +16,14 @@ async function carregarClientes(){
   } catch (error) {
     console.error('Erro ao buscar clientes:', error)
   }
+}
+
+function abrirRegistroCliente(){
+  mostrarRegistroCliente.value = true
+}
+
+function fecharRegistroCliente(){
+  mostrarRegistroCliente.value = false
 }
 
 onMounted(() => {
@@ -32,8 +41,16 @@ onMounted(() => {
       <headerDashboard/>
       
         <div class="btns">
-          <button class="btn">➕</button>
+          <button class="btn" @click="abrirRegistroCliente">➕</button>
         </div>
+
+        <teleport to="body">
+            <div v-if="mostrarRegistroCliente" class="modalOverlay" @click.self="fecharRegistroCliente">
+              <div class="modalContent">
+                <RegistroClienteComponent/>
+              </div>
+            </div>
+          </teleport>
 
         <div class="area-table">
           
@@ -68,6 +85,8 @@ onMounted(() => {
 .dashboard {
   display: flex;
   height: 100vh;
+  position: absolute;
+  width: 100%;
 }
 
 /* Main */
@@ -117,5 +136,28 @@ th, td {
 
 th {
   background-color: var(--cor-fundo-background);
+}
+
+.modalOverlay {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw; 
+  height: 100vh; 
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; 
+}
+
+.modalContent {
+  background: var(--cor-fundo);
+  display: flex;
+  flex-direction: row;
+  max-width:1200px;
+  padding: 20px;
+  border-radius: 10px;
+  gap: 20px;
 }
 </style>

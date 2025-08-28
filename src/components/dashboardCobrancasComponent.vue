@@ -25,8 +25,9 @@ import headerDashboard from "./headerDashboard.vue";
 .dashboard {
   display: flex;
   height: 100vh;
+  position: absolute;
+  width: 100%;
 }
-
 /* Main */
 .main {
   flex: 1;

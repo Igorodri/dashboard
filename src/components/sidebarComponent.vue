@@ -36,6 +36,7 @@ function sair(){
     display: flex;
     flex-direction: column;
     padding: 20px;
+    position: sticky;
     }
     .sidebar .profile {
     text-align: center;

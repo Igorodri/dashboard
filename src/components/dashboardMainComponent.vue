@@ -31,7 +31,7 @@ onMounted(async () => {
       <headerDashboard/>
       <!-- Cards -->
       <section class="cards">
-        <div class="card dark">
+        <div class="card">
           <h4>Faturamento total</h4>
           <p class="value">R${{ metrics.faturamento }}</p>
         </div>
@@ -67,6 +67,8 @@ onMounted(async () => {
 .dashboard {
   display: flex;
   height: 100vh;
+  position: absolute;
+  width: 100%;
 }
 
 /* Main */

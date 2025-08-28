@@ -9,10 +9,11 @@
 
 <style scoped>
     .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 40px;
-    background-color: var( --cor-fundo-background);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+        background-color: var( --cor-fundo-background);
+        position: sticky;
     }
 </style>
