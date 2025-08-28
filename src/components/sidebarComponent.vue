@@ -31,8 +31,8 @@ function sair(){
     /* Sidebar */
     .sidebar {
     width: 240px;
-    background-color: #1f2a44;
-    color: white;
+    background-color: var(--cor-fundo-background);
+    color: var(--cor-principal-texto);
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -40,11 +40,11 @@ function sair(){
     .sidebar .profile {
     text-align: center;
     margin-bottom: 40px;
-    background-color: #1f2a44;
+    background-color: var(--cor-fundo-background);
     }
 
     .sidebar .profile h3{
-        background-color: #1f2a44;
+        background-color: var(--cor-fundo-background);
     }
 
     .sidebar .avatar {
@@ -69,7 +69,7 @@ function sair(){
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
-    background-color: #1f2a44;
+    background-color: var(--cor-fundo-background);
     }
     .sidebar nav a {
     text-decoration: none;
@@ -83,7 +83,7 @@ function sair(){
     .sidebarnav:hover,
     .sidebarnav:hover a {
     background: #334155;
-    color: white;
+    color: var(--cor-principal-texto);
     }
 
 </style>

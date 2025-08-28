@@ -1,6 +1,23 @@
 <script setup>
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
+import {ref, onMounted} from 'vue'
+
+const vendas = ref([])
+
+async function carregarVendas(){
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API+'/select_vendas')
+    const data = await response.json()
+    vendas.value = data.vendas
+  } catch (error) {
+    console.error('Erro ao buscar clientes:', error)
+  }
+}
+
+onMounted(() => {
+  carregarVendas()
+})
 
 
 </script>
@@ -13,9 +30,36 @@ import headerDashboard from "./headerDashboard.vue";
     <main class="main">
       <headerDashboard/>
       
-      <section class="cards">
+      <div class="btns">
+          <button class="btn">➕</button>
+        </div>
 
-      </section>
+        <div class="area-table">
+          
+          <table v-if="vendas.length > 0">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Projeto</th>
+                  <th>Preço</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(venda, index) in vendas" :key="index">
+                  <td>{{ venda.nome_cliente }}</td>
+                  <td>{{ venda.descricao }}</td>
+                  <td>R$ {{ venda.preco }}</td>
+                  <div class="area-btns">
+                    <div class="btn">🗑️</div>
+                    <div class="btn">🖊️</div>
+                  </div>
+                  
+                </tr>
+              </tbody>
+          </table>
+
+          <p v-else>Carregando vendas...</p>
+        </div>
 
     </main>
   </div>

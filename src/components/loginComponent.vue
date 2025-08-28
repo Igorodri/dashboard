@@ -167,7 +167,9 @@ async function login(){
 }
 
 
-@media (min-width: 769px) and (max-width: 1366px) { 
-
+@media (min-width: 1024px) and (max-width: 1366px) { 
+    .area-login{
+        height: 100vh;
+    }
 }
 </style>

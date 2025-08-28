@@ -4,9 +4,11 @@ import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
 
 const metrics = ref({
+  faturamento: 0,
   clientes: 0,
-  cobrancas: 0,
-  vendas: 0
+  vendas_nao_pagas: 0,
+  vendas: 0,
+  vendas_pagas:0
 });
 
 onMounted(async () => {
@@ -31,19 +33,23 @@ onMounted(async () => {
       <section class="cards">
         <div class="card dark">
           <h4>Faturamento total</h4>
-          <p class="value">R$ 2000</p>
+          <p class="value">R${{ metrics.faturamento }}</p>
         </div>
         <div class="card">
           <h4>Clientes</h4>
           <p class="value">{{ metrics.clientes }}</p>
         </div>
         <div class="card">
-          <h4>Cobranças</h4>
-          <p class="value">{{ metrics.cobrancas }}</p>
-        </div>
-        <div class="card">
           <h4>Total de Vendas</h4>
           <p class="value">{{ metrics.vendas}}</p>
+        </div>
+        <div class="card">
+          <h4>Vendas pagas</h4>
+          <p class="value">{{ metrics.vendas_pagas}}</p>
+        </div>
+        <div class="card">
+          <h4>Vendas não Pagas</h4>
+          <p class="value">{{ metrics.vendas_nao_pagas }}</p>
         </div>
       </section>
 
@@ -77,12 +83,12 @@ onMounted(async () => {
   padding: 20px;
 }
 .card {
-  background: #1f2a44;
+  background-color: var(--cor-fundo-background);
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px #0000000d;
   text-align: center;
-   color: white;
+  color: var(--cor-principal-texto);
 }
 
 .card h4 {
