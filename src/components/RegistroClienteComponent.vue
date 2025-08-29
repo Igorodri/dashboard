@@ -3,6 +3,8 @@ import { ref } from "vue";
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
+const emit = defineEmits(["clienteAdicionado"])
+
 const nome = ref("");
 const telefone = ref("");
 
@@ -18,9 +20,9 @@ async function adicionarCliente() {
             })
     })
 
-    const data = response.json()
+    const data = await response.json()
 
-    if(data.ok){
+    if(response.ok){
         Toastify({
             text: "Cliente adicionado com sucesso!",
             close:true,
@@ -33,7 +35,7 @@ async function adicionarCliente() {
             }
           }).showToast()
 
-          carregarVendas()
+          emit("clienteAdicionado")
           nome.value = ''
           telefone.value = ''
     }else{

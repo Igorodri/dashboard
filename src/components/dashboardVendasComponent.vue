@@ -52,6 +52,7 @@ onMounted(() => {
                   <td>R$ {{ venda.preco }}</td>
                   <td>{{ venda.paga }}</td>
                   <div class="area-btns">
+                    <div class="btn">Pagar</div>
                     <div class="btn">🗑️</div>
                     <div class="btn">🖊️</div>
                   </div>

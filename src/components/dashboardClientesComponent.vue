@@ -3,9 +3,10 @@ import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
 import RegistroClienteComponent from "./RegistroClienteComponent.vue";
 import {ref, onMounted} from 'vue'
+import Toastify from 'toastify-js'
+import 'toastify-js/src/toastify.css'
 
 const mostrarRegistroCliente = ref(false)
-
 const clientes = ref([])
 
 async function carregarClientes(){
@@ -15,6 +16,44 @@ async function carregarClientes(){
     clientes.value = data.clientes
   } catch (error) {
     console.error('Erro ao buscar clientes:', error)
+  }
+}
+
+async function excluirCliente(id_cliente){
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API+`/delete_cliente/${id_cliente}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
+
+    if(response.ok){
+        Toastify({
+            text: "Cliente deletado com sucesso!",
+            close:true,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            close: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)"
+            }
+        }).showToast()
+      await carregarClientes(); 
+    } else {
+        Toastify({
+          text: "Não foi possível deletar o Cliente",
+          close:true,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          close: true,
+          style: {
+              background: "linear-gradient(to right, #ff0000, #8b0000);"
+          }
+      }).showToast() 
+    }
+  } catch (error) {
+    console.error("Erro ao excluir cliente:", error);
   }
 }
 
@@ -34,52 +73,47 @@ onMounted(() => {
 
 <template>
   <div class="dashboard">
-
     <sidebarComponent/>
-
     <main class="main">
       <headerDashboard/>
       
-        <div class="btns">
-          <button class="btn" @click="abrirRegistroCliente">➕</button>
-        </div>
+      <div class="btns">
+        <button class="btn" @click="abrirRegistroCliente">➕</button>
+      </div>
 
-        <teleport to="body">
-            <div v-if="mostrarRegistroCliente" class="modalOverlay" @click.self="fecharRegistroCliente">
-              <div class="modalContent">
-                <RegistroClienteComponent/>
+      <teleport to="body">
+        <div v-if="mostrarRegistroCliente" class="modalOverlay" @click.self="fecharRegistroCliente">
+          <div class="modalContent">
+            <RegistroClienteComponent @clienteAdicionado="carregarClientes"  />
+          </div>
+        </div>
+      </teleport>
+
+      <div class="area-table">
+        <table v-if="clientes.length > 0">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Telefone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="cliente in clientes" :key="cliente.id_cliente">
+              <td>{{ cliente.nome_cliente }}</td>
+              <td>{{ cliente.telefone }}</td>
+              <div class="area-btns">
+                <div class="btn" @click="excluirCliente(cliente.id_cliente)">🗑️</div>
+                <div class="btn">🖊️</div>
               </div>
-            </div>
-          </teleport>
-
-        <div class="area-table">
-          
-          <table v-if="clientes.length > 0">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Telefone</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(cliente, index) in clientes" :key="index">
-                  <td>{{ cliente.nome_cliente }}</td>
-                  <td>{{ cliente.telefone }}</td>
-                  <div class="area-btns">
-                    <div class="btn">🗑️</div>
-                    <div class="btn">🖊️</div>
-                  </div>
-                  
-                </tr>
-              </tbody>
-          </table>
-
-          <p v-else>Carregando clientes...</p>
-        </div>
-      
+            </tr>
+          </tbody>
+        </table>
+        <p v-else>Carregando clientes...</p>
+      </div>
     </main>
   </div>
 </template>
+
 
 <style>
 .dashboard {
