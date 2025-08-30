@@ -3,15 +3,12 @@ import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Venda from '@/views/Venda.vue'
 import Clientes from '@/views/Clientes.vue'
-import Cobrancas from '@/views/Cobrancas.vue'
-import { compile } from 'vue'
 
 const routes = [
     {path: '/', name: 'login',component: Login},
     {path: '/dashboard', name: 'dashboard',component: Dashboard},
     {path: '/vendas', name: 'vendas', component: Venda},
-    {path: '/clientes', name: 'clientes', component: Clientes},
-    {path: '/cobrancas', name: 'cobrancas', component: Cobrancas}
+    {path: '/clientes', name: 'clientes', component: Clientes}
 ]
 
 const router = createRouter({

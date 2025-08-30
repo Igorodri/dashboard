@@ -2,6 +2,8 @@
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
 import {ref, onMounted} from 'vue'
+import Toastify from 'toastify-js'
+import 'toastify-js/src/toastify.css'
 
 const vendas = ref([])
 
@@ -9,11 +11,89 @@ async function carregarVendas(){
   try {
     const response = await fetch(import.meta.env.VITE_URL_API+'/select_vendas')
     const data = await response.json()
+        console.log(data)
     vendas.value = data.vendas
   } catch (error) {
     console.error('Erro ao buscar clientes:', error)
   }
 }
+
+async function pagarVenda(id_venda){
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API+`/pagar/${id_venda}`, {
+      method: "POST"
+    });
+    const data = await response.json();
+
+    if(response.ok){
+        Toastify({
+            text: "Venda paga com sucesso!",
+            close:true,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            close: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)"
+            }
+        }).showToast()
+      await carregarVendas() 
+    } else {
+        Toastify({
+          text: "Não foi possível pagar a venda",
+          close:true,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          close: true,
+          style: {
+              background: "linear-gradient(to right, #ff0000, #8b0000);"
+          }
+      }).showToast() 
+    }
+  } catch (error) {
+    console.error("Erro ao excluir cliente:", error);
+  }
+}
+
+async function cancelarPagamentoVenda(id_venda){
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API+`/cancelarpagamento/${id_venda}`, {
+      method: "POST"
+    });
+    const data = await response.json();
+
+    if(response.ok){
+        Toastify({
+            text: "Venda cancelada com sucesso!",
+            close:true,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            close: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)"
+            }
+        }).showToast()
+      await carregarVendas() 
+    } else {
+        Toastify({
+          text: "Não foi possível cancelada a venda",
+          close:true,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          close: true,
+          style: {
+              background: "linear-gradient(to right, #ff0000, #8b0000);"
+          }
+      }).showToast() 
+    }
+  } catch (error) {
+    console.error("Erro ao excluir cliente:", error);
+  }
+}
+
 
 onMounted(() => {
   carregarVendas()
@@ -45,20 +125,21 @@ onMounted(() => {
                   <th>Pago</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="(venda, index) in vendas" :key="index">
-                  <td>{{ venda.nome_cliente }}</td>
-                  <td>{{ venda.descricao }}</td>
-                  <td>R$ {{ venda.preco }}</td>
-                  <td>{{ venda.paga }}</td>
-                  <div class="area-btns">
-                    <div class="btn">Pagar</div>
-                    <div class="btn">🗑️</div>
-                    <div class="btn">🖊️</div>
-                  </div>
-                  
-                </tr>
-              </tbody>
+                <tbody>
+                  <tr v-for="venda in vendas" :key="venda.id_venda">
+                    <td>{{ venda.nome_cliente }}</td>
+                    <td>{{ venda.descricao }}</td>
+                    <td>R$ {{ venda.preco }}</td>
+                    <td>{{ venda.paga }}</td>
+                    <div class="area-btns">
+                      <div v-if="venda.paga == 'Não'" class="btn" @click="pagarVenda(venda.id_venda)">Pagar</div>
+                      <div v-else class="btn" @click="cancelarPagamentoVenda(venda.id_venda)">Cancelar</div>
+                      
+                      <div class="btn">🗑️</div>
+                      <div class="btn">🖊️</div>
+                    </div>
+                  </tr>
+                </tbody>
           </table>
 
           <p v-else>Carregando vendas...</p>

@@ -15,12 +15,11 @@ function sair(){
     <aside class="sidebar">
       <div class="profile">
         <div class="avatar">👤</div>
-        <h3>Igor Mascarenhas</h3>
+        <h3>IgorStudio</h3>
       </div>
       <nav>
         <RouterLink to="/dashboard" class="sidebarnav"><a>🏠 Home</a></RouterLink> 
         <RouterLink to="/vendas" class="sidebarnav"><a>🛒 Vendas</a></RouterLink> 
-        <RouterLink to="/cobrancas" class="sidebarnav"><a>📦 Cobranças</a></RouterLink>
         <RouterLink to="/clientes" class="sidebarnav"><a>🙋‍♂️ Clientes</a></RouterLink>
         <a @click="sair()" class="sidebarnav">📤 Sair</a>
       </nav>

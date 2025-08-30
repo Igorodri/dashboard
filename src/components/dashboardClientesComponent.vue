@@ -57,6 +57,7 @@ async function excluirCliente(id_cliente){
   }
 }
 
+
 function abrirRegistroCliente(){
   mostrarRegistroCliente.value = true
 }
