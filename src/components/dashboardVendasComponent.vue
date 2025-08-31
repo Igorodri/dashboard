@@ -1,10 +1,12 @@
 <script setup>
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
+import RegistroVendaComponent from "./RegistroVendaComponent.vue";
 import {ref, onMounted} from 'vue'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
+const mostrarRegistroVenda = ref(false)
 const vendas = ref([])
 
 async function carregarVendas(){
@@ -95,6 +97,15 @@ async function cancelarPagamentoVenda(id_venda){
 }
 
 
+function abrirRegistroVenda(){
+  mostrarRegistroVenda.value = true
+}
+
+function fecharRegistroVenda(){
+  mostrarRegistroVenda.value = false
+}
+
+
 onMounted(() => {
   carregarVendas()
 })
@@ -111,8 +122,16 @@ onMounted(() => {
       <headerDashboard/>
       
       <div class="btns">
-          <button class="btn">➕</button>
+          <button class="btn" @click="abrirRegistroVenda">➕</button>
         </div>
+
+        <teleport to="body">
+        <div v-if="mostrarRegistroVenda" class="modalOverlay" @click.self="fecharRegistroVenda">
+          <div class="modalContent">
+            <RegistroVendaComponent @clienteAdicionado="carregarVendas"  />
+          </div>
+        </div>
+      </teleport>
 
         <div class="area-table">
           

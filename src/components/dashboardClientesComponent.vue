@@ -2,12 +2,15 @@
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
 import RegistroClienteComponent from "./RegistroClienteComponent.vue";
+import EditarClienteComponent from "./EditarClienteComponent.vue";
 import {ref, onMounted} from 'vue'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
 const mostrarRegistroCliente = ref(false)
+const mostrarEditCliente = ref(false)
 const clientes = ref([])
+const clienteSelecionado = ref(null)
 
 async function carregarClientes(){
   try {
@@ -66,6 +69,14 @@ function fecharRegistroCliente(){
   mostrarRegistroCliente.value = false
 }
 
+function abrirEditCliente(cliente){
+  clienteSelecionado.value = cliente
+  mostrarEditCliente.value = true
+}
+function fecharEditCliente(){
+  mostrarEditCliente.value = false
+}
+
 onMounted(() => {
   carregarClientes()
 })
@@ -90,6 +101,17 @@ onMounted(() => {
         </div>
       </teleport>
 
+      <teleport to="body">
+        <div v-if="mostrarEditCliente" class="modalOverlay" @click.self="fecharEditCliente">
+          <div class="modalContent">
+            <EditarClienteComponent 
+              v-if="clienteSelecionado" 
+              :cliente="clienteSelecionado"
+              @clienteAdicionado="carregarClientes"/>
+          </div>
+        </div>
+      </teleport>
+
       <div class="area-table">
         <table v-if="clientes.length > 0">
           <thead>
@@ -104,7 +126,7 @@ onMounted(() => {
               <td>{{ cliente.telefone }}</td>
               <div class="area-btns">
                 <div class="btn" @click="excluirCliente(cliente.id_cliente)">🗑️</div>
-                <div class="btn">🖊️</div>
+                <div class="btn" @click="abrirEditCliente(cliente)">🖊️</div>
               </div>
             </tr>
           </tbody>
