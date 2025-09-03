@@ -56,12 +56,12 @@ async function adicionarVenda() {
 
 <template>
     <section class="modalRegistrarCliente">
-        <form class="form" @submit.prevent="adicionarCliente">
+        <form class="form" @submit.prevent="adicionarVenda">
             <div class="form-group">
              <h3>Registro de Venda</h3>   
             <label for="nome">Nome do Cliente</label>
             <select name="" id="">
-                <v-for></v-for>
+                <option value=""></option>
             </select>
             </div>
 
@@ -75,7 +75,7 @@ async function adicionarVenda() {
             <input type="number" placeholder="Digite o valor da venda">
             </div>
 
-            <button type="submit" class="btn-save">Salvar Cliente</button>
+            <button type="submit" class="btn-save">Salvar Venda</button>
         </form>
     </section>
   

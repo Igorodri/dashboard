@@ -96,6 +96,43 @@ async function cancelarPagamentoVenda(id_venda){
   }
 }
 
+async function excluirVendas(id_venda){
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API+`/delete_venda/${id_venda}`, {
+      method: "DELETE"
+    });
+    const data = await response.json();
+
+    if(response.ok){
+        Toastify({
+            text: "Venda deletada com sucesso!",
+            close:true,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            close: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)"
+            }
+        }).showToast()
+      await carregarVendas()
+    } else {
+        Toastify({
+          text: "Não foi possível deletar a Venda",
+          close:true,
+          duration: 3000,
+          gravity: "top",
+          position: "right",
+          close: true,
+          style: {
+              background: "linear-gradient(to right, #ff0000, #8b0000);"
+          }
+      }).showToast() 
+    }
+  } catch (error) {
+    console.error("Erro ao excluir cliente:", error);
+  }
+}
 
 function abrirRegistroVenda(){
   mostrarRegistroVenda.value = true
@@ -128,7 +165,7 @@ onMounted(() => {
         <teleport to="body">
         <div v-if="mostrarRegistroVenda" class="modalOverlay" @click.self="fecharRegistroVenda">
           <div class="modalContent">
-            <RegistroVendaComponent @clienteAdicionado="carregarVendas"  />
+            <RegistroVendaComponent @vendaAdicionado="carregarVendas"  />
           </div>
         </div>
       </teleport>
@@ -154,7 +191,7 @@ onMounted(() => {
                       <div v-if="venda.paga == 'Não'" class="btn" @click="pagarVenda(venda.id_venda)">Pagar</div>
                       <div v-else class="btn" @click="cancelarPagamentoVenda(venda.id_venda)">Cancelar</div>
                       
-                      <div class="btn">🗑️</div>
+                      <div class="btn" @click="excluirVendas(venda.id_venda)">🗑️</div>
                       <div class="btn">🖊️</div>
                     </div>
                   </tr>
