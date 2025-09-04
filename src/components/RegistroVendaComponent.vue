@@ -1,12 +1,25 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
-const emit = defineEmits(["vendaAdicionado"])
+const emit = defineEmits(["vendaAdicionada"])
 
-const nome = ref("");
-const telefone = ref("");
+const clientes = ref([])
+const clienteSelecionado = ref("");
+const descricaoVenda = ref(""); 
+const precoVenda = ref(null)
+
+async function carregarClientes() {
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API + '/select_cliente')
+    const data = await response.json()
+    console.log("CLIENTES API:", data)
+    clientes.value = Array.isArray(data) ? data : data.clientes
+  } catch (err) {
+    console.error("Erro ao carregar clientes:", err)
+  }
+}
 
 async function adicionarVenda() {
     const response = await fetch(import.meta.env.VITE_URL_API+'/add_venda',{
@@ -14,10 +27,11 @@ async function adicionarVenda() {
             headers: {
                 'Content-Type':'application/json'
             },
-            body:JSON.stringify({
-                nome_cliente:nome.value,
-                telefone_cliente: telefone.value
-            })
+          body: JSON.stringify({
+              id_cliente: clienteSelecionado.value,
+              descricao: descricaoVenda.value,     
+              preco: precoVenda.value              
+          })
     })
 
     const data = await response.json()
@@ -35,9 +49,10 @@ async function adicionarVenda() {
             }
           }).showToast()
 
-          emit("clienteAdicionado")
-          nome.value = ''
-          telefone.value = ''
+          emit("vendaAdicionada")
+          clienteSelecionado.value = ""
+          descricaoVenda.value = ""
+          precoVenda.value = null
     }else{
         Toastify({
             text: "Erro ao adicionar venda",
@@ -50,35 +65,43 @@ async function adicionarVenda() {
               background: "linear-gradient(to right, #00b09b, #96c93d)"
             }
           }).showToast()
+
+          console.log('Cliente Selecionado: '+ clienteSelecionado)
+          console.log('Descricao: '+descricaoVenda)
+          console.log('Preco: '+precoVenda)
     }
 }
+
+onMounted(() => {
+  carregarClientes()
+})
+
 </script>
 
 <template>
     <section class="modalRegistrarCliente">
         <form class="form" @submit.prevent="adicionarVenda">
             <div class="form-group">
-             <h3>Registro de Venda</h3>   
-            <label for="nome">Nome do Cliente</label>
-            <select name="" id="">
-                <option value=""></option>
-            </select>
+                <h3>Registro de Venda</h3>
+                <label for="nome">Nome do Cliente</label>
+                <select v-model="clienteSelecionado">
+                    <option value="" disabled selected>Selecione um cliente</option>
+                    <option v-for="cliente in clientes" :key="cliente.id_cliente" :value="cliente.id_cliente">
+                        {{ cliente.nome_cliente }}
+                    </option>
+                </select>
             </div>
-
             <div class="form-group">
-            <label for="telefone">Descrição da Venda</label>
-            <textarea id="descricao" placeholder="Digite a descrição da venda"></textarea>
+                <label for="telefone">Descrição da Venda</label>
+                <textarea id="descricao" v-model="descricaoVenda" placeholder="Digite a descrição da venda"></textarea>
             </div>
-
             <div class="form-group">
-            <label for="">Preço da Venda</label>
-            <input type="number" placeholder="Digite o valor da venda">
+                <label for="">Preço da Venda</label>
+                <input type="number" v-model="precoVenda" placeholder="Digite o valor da venda">
             </div>
-
             <button type="submit" class="btn-save">Salvar Venda</button>
         </form>
     </section>
-  
 </template>
 
 <style scoped>
@@ -142,5 +165,20 @@ input:focus {
 
 .btn-save:hover {
   background: #1d4ed8;
+}
+
+textarea{
+  resize: none;
+  height: 200px;
+  border-radius: 5px;
+  background: #111827;
+  color: white;
+}
+
+select{
+  background: #111827;
+  color: white;
+  padding: 4px;
+  border-radius: 8px;
 }
 </style>

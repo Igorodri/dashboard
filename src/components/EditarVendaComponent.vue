@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
-const emit = defineEmits(["clienteAdicionado"])
+const emit = defineEmits(["vendaEditado"])
 
 const props = defineProps({
   cliente: { type: Object, required: true } 
@@ -12,16 +12,16 @@ const props = defineProps({
 const nome = ref("");
 const telefone = ref("");
 
-watch(() => props.cliente, (novo) => {
+watch(() => props.venda, (novo) => {
   if (novo) {
     nome.value = novo.nome_cliente
     telefone.value = novo.telefone
   }
 }, { immediate: true })
 
-async function editarCliente() {
+async function editarVenda() {
   try {
-    const response = await fetch(import.meta.env.VITE_URL_API+`/edit_cliente/${props.cliente.id_cliente}`, {
+    const response = await fetch(import.meta.env.VITE_URL_API+`/edit_venda/${props.venda.id_venda}`, {
       method: 'PUT',
       headers: {
         'Content-Type':'application/json'
@@ -36,7 +36,7 @@ async function editarCliente() {
 
     if (response.ok) {
       Toastify({
-        text: "Cliente editado com sucesso!",
+        text: "Venda editada com sucesso!",
         duration: 3000,
         gravity: "top",
         position: "right",
@@ -46,10 +46,10 @@ async function editarCliente() {
         }
       }).showToast()
 
-      emit("clienteAdicionado") 
+      emit("vendaEditada") 
     } else {
       Toastify({
-        text: "Não foi possível editar o Cliente",
+        text: "Não foi possível editar a venda",
         duration: 3000,
         gravity: "top",
         position: "right",
@@ -60,7 +60,7 @@ async function editarCliente() {
       }).showToast()
     }
   } catch (error) {
-    console.error("Erro ao editar cliente:", error);
+    console.error("Erro ao editar venda:", error);
   }
 }
 </script>
@@ -69,17 +69,24 @@ async function editarCliente() {
   <section class="modalRegistrarCliente">
     <form class="form" @submit.prevent="editarCliente">
       <div class="form-group">
-        <h3>Editar Cliente</h3>   
+        <h3>Editar Venda</h3>   
         <label for="nome">Nome do Cliente</label>
-        <input id="nome" v-model="nome" type="text" placeholder="Digite o nome do cliente" />
-      </div>
+            <select name="" id="">
+                <option value=""></option>
+            </select>
+            </div>
 
-      <div class="form-group">
-        <label for="telefone">Contato do Cliente</label>
-        <input id="telefone" v-model="telefone" type="text" placeholder="(xx) xxxxx-xxxx" />
-      </div>
+            <div class="form-group">
+            <label for="telefone">Descrição da Venda</label>
+            <textarea id="descricao" placeholder="Digite a descrição da venda"></textarea>
+            </div>
 
-      <button type="submit" class="btn-save">Editar Cliente</button>
+            <div class="form-group">
+            <label for="">Preço da Venda</label>
+            <input type="number" placeholder="Digite o valor da venda">
+            </div>
+
+      <button type="submit" class="btn-save">Editar Venda</button>
     </form>
   </section>
 </template>

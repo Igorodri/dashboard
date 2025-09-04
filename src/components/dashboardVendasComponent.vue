@@ -165,7 +165,7 @@ onMounted(() => {
         <teleport to="body">
         <div v-if="mostrarRegistroVenda" class="modalOverlay" @click.self="fecharRegistroVenda">
           <div class="modalContent">
-            <RegistroVendaComponent @vendaAdicionado="carregarVendas"  />
+            <RegistroVendaComponent @vendaAdicionada="carregarVendas"  />
           </div>
         </div>
       </teleport>
