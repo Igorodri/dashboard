@@ -2,12 +2,15 @@
 import sidebarComponent from "./sidebarComponent.vue";
 import headerDashboard from "./headerDashboard.vue";
 import RegistroVendaComponent from "./RegistroVendaComponent.vue";
+import EditarVendaComponent from "./EditarVendaComponent.vue";
 import {ref, onMounted} from 'vue'
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
 const mostrarRegistroVenda = ref(false)
+const mostrarEditarVenda = ref(false)
 const vendas = ref([])
+const vendaSelecionada = ref(null)
 
 async function carregarVendas(){
   try {
@@ -142,6 +145,16 @@ function fecharRegistroVenda(){
   mostrarRegistroVenda.value = false
 }
 
+function abrirEditarVenda(venda){
+  vendaSelecionada.value = venda
+  mostrarEditarVenda.value = true
+}
+
+function fecharEditarVenda(){
+  mostrarEditarVenda.value = false
+  vendaSelecionada.value = null
+}
+
 
 onMounted(() => {
   carregarVendas()
@@ -170,6 +183,14 @@ onMounted(() => {
         </div>
       </teleport>
 
+        <teleport to="body">
+        <div v-if="mostrarEditarVenda" class="modalOverlay" @click.self="fecharEditarVenda">
+          <div class="modalContent">
+            <EditarVendaComponent @vendaEditada="carregarVendas" :venda="vendaSelecionada"/>
+          </div>
+        </div>
+      </teleport>
+
         <div class="area-table">
           
           <table v-if="vendas.length > 0">
@@ -192,7 +213,7 @@ onMounted(() => {
                       <div v-else class="btn" @click="cancelarPagamentoVenda(venda.id_venda)">Cancelar</div>
                       
                       <div class="btn" @click="excluirVendas(venda.id_venda)">🗑️</div>
-                      <div class="btn">🖊️</div>
+                      <div class="btn" @click="abrirEditarVenda(venda)">🖊️</div>
                     </div>
                   </tr>
                 </tbody>

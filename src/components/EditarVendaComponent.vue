@@ -1,36 +1,48 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 
-const emit = defineEmits(["vendaEditado"])
+const emit = defineEmits(["vendaEditada"])
 
 const props = defineProps({
-  cliente: { type: Object, required: true } 
+  venda: { type: Object, required: true } 
 })
 
-const nome = ref("");
-const telefone = ref("");
+const clientes = ref([])
+const clienteSelecionado = ref("")
+const descricaoVenda = ref("")
+const precoVenda = ref(null)
+
+async function carregarClientes() {
+  try {
+    const response = await fetch(import.meta.env.VITE_URL_API + '/select_cliente')
+    const data = await response.json()
+    clientes.value = Array.isArray(data) ? data : data.clientes
+  } catch (err) {
+    console.error("Erro ao carregar clientes:", err)
+  }
+}
 
 watch(() => props.venda, (novo) => {
   if (novo) {
-    nome.value = novo.nome_cliente
-    telefone.value = novo.telefone
+    clienteSelecionado.value = novo.id_cliente
+    descricaoVenda.value = novo.descricao
+    precoVenda.value = novo.preco
   }
 }, { immediate: true })
 
 async function editarVenda() {
   try {
-    const response = await fetch(import.meta.env.VITE_URL_API+`/edit_venda/${props.venda.id_venda}`, {
+    const response = await fetch(import.meta.env.VITE_URL_API + `/edit_venda/${props.venda.id_venda}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type':'application/json'
-      },
+      headers: { 'Content-Type':'application/json' },
       body: JSON.stringify({
-        nome_cliente: nome.value,
-        telefone_cliente: telefone.value
+        id_cliente: clienteSelecionado.value,
+        descricao: descricaoVenda.value,
+        preco: precoVenda.value
       })
-    })
+    });
 
     const data = await response.json();
 
@@ -41,55 +53,59 @@ async function editarVenda() {
         gravity: "top",
         position: "right",
         close: true,
-        style: {
-          background: "linear-gradient(to right, #00b09b, #96c93d)"
-        }
-      }).showToast()
+        style: { background: "linear-gradient(to right, #00b09b, #96c93d)" }
+      }).showToast();
 
-      emit("vendaEditada") 
+      emit("vendaEditada");
     } else {
       Toastify({
-        text: "Não foi possível editar a venda",
+        text: data.error || "Não foi possível editar a venda",
         duration: 3000,
         gravity: "top",
         position: "right",
         close: true,
-        style: {
-          background: "linear-gradient(to right, #ff0000, #8b0000)"
-        }
-      }).showToast()
+        style: { background: "linear-gradient(to right, #ff0000, #8b0000)" }
+      }).showToast();
     }
   } catch (error) {
     console.error("Erro ao editar venda:", error);
   }
 }
+onMounted(() => {
+  carregarClientes()
+})
 </script>
 
 <template>
   <section class="modalRegistrarCliente">
-    <form class="form" @submit.prevent="editarCliente">
+    <form class="form" @submit.prevent="editarVenda">
       <div class="form-group">
         <h3>Editar Venda</h3>   
+
         <label for="nome">Nome do Cliente</label>
-            <select name="" id="">
-                <option value=""></option>
-            </select>
-            </div>
+        <select v-model="clienteSelecionado">
+          <option value="" disabled>Selecione um cliente</option>
+          <option v-for="cliente in clientes" :key="cliente.id_cliente" :value="cliente.id_cliente">
+            {{ cliente.nome_cliente }}
+          </option>
+        </select>
+      </div>
 
-            <div class="form-group">
-            <label for="telefone">Descrição da Venda</label>
-            <textarea id="descricao" placeholder="Digite a descrição da venda"></textarea>
-            </div>
+      <div class="form-group">
+        <label for="descricao">Descrição da Venda</label>
+        <textarea id="descricao" v-model="descricaoVenda" placeholder="Digite a descrição da venda"></textarea>
+      </div>
 
-            <div class="form-group">
-            <label for="">Preço da Venda</label>
-            <input type="number" placeholder="Digite o valor da venda">
-            </div>
+      <div class="form-group">
+        <label for="preco">Preço da Venda</label>
+        <input type="number" id="preco" v-model="precoVenda" placeholder="Digite o valor da venda">
+      </div>
 
       <button type="submit" class="btn-save">Editar Venda</button>
     </form>
   </section>
 </template>
+
 
 <style scoped>
 
