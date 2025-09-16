@@ -11,12 +11,21 @@ const metrics = ref({
   vendas_pagas:0
 });
 
+const economias = ref(0)
 onMounted(async () => {
   try {
     const res = await fetch(import.meta.env.VITE_URL_API+'/count');
     metrics.value = await res.json();
   } catch (err) {
     console.error("Erro ao buscar métricas", err);
+  }
+
+    try {
+    const response = await fetch(import.meta.env.VITE_URL_API + '/select_economias')
+    const data = await response.json()
+    economias.value = data.economias
+  } catch (error) {
+    console.error('Erro ao buscar economias:', error)
   }
 });
 
@@ -30,6 +39,9 @@ onMounted(async () => {
     <main class="main">
       <headerDashboard/>
       <!-- Cards -->
+
+      <h2>Venda de Sites💻</h2>
+
       <section class="cards">
         <div class="card">
           <h4>Faturamento total</h4>
@@ -53,17 +65,22 @@ onMounted(async () => {
         </div>
       </section>
 
-      <section class="table_vendas">
-        <table>
-            
-        </table>
+      <h2>Financeiro Pessoal💵</h2>
+
+      <section class="cards">
+        
+        <div class="card">
+          <h4>Dinheiro Economizado</h4>
+          <p class="value">R${{ economias }}</p>
+        </div>
+        
       </section>
 
     </main>
   </div>
 </template>
 
-<style>
+<style >
 .dashboard {
   display: flex;
   height: 100vh;
@@ -76,6 +93,13 @@ onMounted(async () => {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.main h2{
+  margin-top: 20px;
+  margin-left: 30px;
+  color: white;
+  font-size: 30px;
 }
 
 .cards {

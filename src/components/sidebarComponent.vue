@@ -18,9 +18,10 @@ function sair(){
         <h3>IgorStudio</h3>
       </div>
       <nav>
-        <RouterLink to="/dashboard" class="sidebarnav"><a>🏠 Home</a></RouterLink> 
-        <RouterLink to="/vendas" class="sidebarnav"><a>🛒 Vendas</a></RouterLink> 
-        <RouterLink to="/clientes" class="sidebarnav"><a>🙋‍♂️ Clientes</a></RouterLink>
+        <RouterLink to="/dashboard" class="sidebarnav">🏠 Home</RouterLink> 
+        <RouterLink to="/vendas" class="sidebarnav">🛒 Vendas</RouterLink> 
+        <RouterLink to="/clientes" class="sidebarnav">🙋‍♂️ Clientes</RouterLink>
+        <RouterLink to="/financeiro" class="sidebarnav">✋ Financeiro</RouterLink>
         <a @click="sair()" class="sidebarnav">📤 Sair</a>
       </nav>
     </aside>
